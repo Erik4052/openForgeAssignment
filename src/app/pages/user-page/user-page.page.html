@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title class="content-centered">User Selected</ion-title>
+    <ion-title class="title-centered">User Selected</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -20,7 +20,8 @@
 
       <ion-item>
         <ion-label>
-          <h3 [repoHighlight]="this.userService.user()?.public_repos ?? 0">Public Repositories: {{ this.userService.user()?.public_repos }}</h3>
+          <h3 [repoHighlight]="this.userService.user()?.public_repos ?? 0">Public Repositories: {{
+            this.userService.user()?.public_repos }}</h3>
         </ion-label>
       </ion-item>
 

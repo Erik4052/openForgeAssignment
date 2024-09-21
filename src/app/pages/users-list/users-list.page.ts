@@ -59,7 +59,6 @@ import {
 export class UsersListPage implements OnInit {
   private store = inject(Store);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   userService = inject(UserService);
   users$!: Observable<User[]>;
   since = 0;
