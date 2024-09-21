@@ -1,3 +1,4 @@
+
 # Open Forge App
 
 # A GitHub Users App
@@ -31,10 +32,14 @@ This is an Ionic + Angular application that fetches and displays GitHub users us
 ### Key Features
 
 Standalone Components: This application follows Angular's standalone components feature, which allows for more modular development without the need for NgModules.
-New Dependency Injection System: The project uses Angular's new dependency injection system (inject()) for cleaner and more concise code, eliminating the need for constructor-based injection.
-GitHub API Integration: Fetches user data from the GitHub API with the ability to paginate and search users by login.
-Search Functionality: Includes a search bar to find users by their GitHub login.
-Infinite Scroll: Loads more users as you scroll down, utilizing Ionic's infinite scroll component.
+## New Dependency Injection System
+The project uses Angular's new dependency injection system (inject()) for cleaner and more concise code, eliminating the need for constructor-based injection.
+## GitHub API Integration
+Fetches user data from the GitHub API with the ability to paginate and search users by login.
+#### Search Functionality 
+Includes a search bar to find users by their GitHub login.
+#### Infinite Scroll 
+Loads more users as you scroll down, utilizing Ionic's infinite scroll component.
 Removed Test Files
 During the development of this project, all unnecessary test files (such as *.spec.ts) were removed, as they were not required for this proof-of-concept application.
 
