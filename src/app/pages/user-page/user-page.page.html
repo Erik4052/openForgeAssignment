@@ -20,7 +20,7 @@
 
       <ion-item>
         <ion-label>
-          <h3>Public Repositories: {{ this.userService.user()?.public_repos }}</h3>
+          <h3 [repoHighlight]="this.userService.user()?.public_repos ?? 0">Public Repositories: {{ this.userService.user()?.public_repos }}</h3>
         </ion-label>
       </ion-item>
 

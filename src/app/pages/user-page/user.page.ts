@@ -5,6 +5,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/stan
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonAvatar, IonLabel } from '@ionic/angular/standalone';
 import { UserService } from 'src/app/Services/user.service';
 import { Store } from '@ngrx/store';
+import { RepositoryHighlight } from 'src/app/directives/repos.directive';
 
 @Component({
   selector: 'app-user-page',
@@ -23,6 +24,7 @@ import { Store } from '@ngrx/store';
     IonHeader,
     IonTitle,
     IonToolbar,
+    RepositoryHighlight
   ]
 })
 export class UserPage implements OnInit {
