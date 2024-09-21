@@ -1,6 +1,15 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { IonButton } from '@ionic/angular/standalone';
+import { User } from 'src/app/models/user.model';
+import { Store } from '@ngrx/store';
+import { UserService } from 'src/app/Services/user.service';
+import { debounceTime, distinctUntilChanged, Observable } from 'rxjs';
+import { clearUsers, loadUsers } from 'src/app/store/actions/user.actions';
+import { InAppBrowser } from '@capacitor/inappbrowser';
+import { Capacitor } from '@capacitor/core';
 import {
   IonSearchbar,
   IonContent,
@@ -18,16 +27,6 @@ import {
   IonCardTitle,
   IonCardContent,
 } from '@ionic/angular/standalone';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { IonButton } from '@ionic/angular/standalone';
-import { User } from 'src/app/models/user.model';
-import { Store } from '@ngrx/store';
-import { UserService } from 'src/app/Services/user.service';
-import { debounceTime, distinctUntilChanged, Observable } from 'rxjs';
-import { loadUsers } from 'src/app/store/actions/user.actions';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { InAppBrowser } from '@capacitor/inappbrowser';
-import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-users-list',
@@ -119,8 +118,8 @@ export class UsersListPage implements OnInit {
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe(() => {
         if (this.searchControl.value === '') {
+          this._clearUsersState();
           this._getUsers();
-          this._removeDuplicatedUsers(this.userService.users());
           return;
         } else {
           this._filterUsers();
@@ -146,5 +145,9 @@ export class UsersListPage implements OnInit {
         !currentUsers.some((existingUser) => existingUser.id === newUser.id)
     );
     this.userService.users.set([...currentUsers, ...newUsers]);
+  }
+
+  private _clearUsersState() {
+    this.store.dispatch(clearUsers());
   }
 }

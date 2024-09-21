@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { loadUsersSuccess, loadUsersFailure } from '../actions/user.actions';
+import { loadUsersSuccess, loadUsersFailure, clearUsers } from '../actions/user.actions';
 import { User } from '../../models/user.model';
 
 export const initialState: User[] = [];
@@ -11,5 +11,6 @@ export const userReducer = createReducer(
     ...state,
     loading: false,
     error,
-  }))
+  })),
+  on(clearUsers, () =>initialState)
 );

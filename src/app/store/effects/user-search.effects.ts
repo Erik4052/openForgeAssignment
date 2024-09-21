@@ -21,7 +21,7 @@ export class UserSearchEffects {
       mergeMap((action) =>{
         const headers = new HttpHeaders({
           'Accept': 'application/vnd.github+json',
-          'Authorization': `Bearer `,
+          'Authorization': `Bearer ${environment.githubToken}`,
           'X-GitHub-Api-Version': '2022-11-28'
         });
 
