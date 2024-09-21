@@ -1,0 +1,7 @@
+{
+  "name": "open-forge",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

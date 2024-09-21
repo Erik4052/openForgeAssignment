@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Users List</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if(this.userService.users()) {
+  <ion-list>
+    @for( user of this.userService.users(); track user.id){
+    <ion-item (click)="openUser(user)">
+      <ion-avatar slot="start">
+        <img [src]="user.avatar_url">
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ user.login }}</h2>
+      </ion-label>
+    </ion-item>
+    }
+  </ion-list>
+  }
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

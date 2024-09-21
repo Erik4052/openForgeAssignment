@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="content-centered">User Selected</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+@if(this.userService.user()){
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <ion-item>
+        <ion-avatar slot="start">
+          <img [src]="this.userService.user()?.avatar_url">
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ this.userService.user()?.name || this.userService.user()?.login }}</h2>
+          <p>{{ this.userService.user()?.bio || 'No bio available' }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <h3>Public Repositories: {{ this.userService.user()?.public_repos }}</h3>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <h3>Followers: {{ this.userService.user()?.['followers'] }}</h3>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>
+          <h3>Following: {{ this.userService.user()?.['following'] }}</h3>
+        </ion-label>
+      </ion-item>
+
+
+      <ion-item>
+        <ion-label>
+          <h3>Company: {{ this.userService.user()?.company }}</h3>
+        </ion-label>
+      </ion-item>
+
+
+      <ion-item>
+        <ion-label>
+          <h3>Location: {{ this.userService.user()?.location }}</h3>
+        </ion-label>
+      </ion-item>
+
+      @if(this.userService.user()?.blog){
+      <ion-item>
+        <ion-label>
+          <h3>Blog: <a [href]="this.userService.user()?.blog" target="_blank">{{ this.userService.user()?.blog }}</a>
+          </h3>
+        </ion-label>
+      </ion-item>
+      }
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+}
