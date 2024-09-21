@@ -1,21 +1,29 @@
-import {
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
+  IonSearchbar,
   IonContent,
   IonHeader,
   IonTitle,
-  IonToolbar, IonList, IonAvatar, IonItem, IonLabel, IonInfiniteScroll, IonInfiniteScrollContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/angular/standalone';
-import { Router, RouterModule } from '@angular/router';
+  IonToolbar,
+  IonList,
+  IonAvatar,
+  IonItem,
+  IonLabel,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+} from '@ionic/angular/standalone';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonButton } from '@ionic/angular/standalone';
 import { User } from 'src/app/models/user.model';
 import { Store } from '@ngrx/store';
 import { UserService } from 'src/app/Services/user.service';
-import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable } from 'rxjs';
 import { loadUsers } from 'src/app/store/actions/user.actions';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { InAppBrowser } from '@capacitor/inappbrowser';
@@ -26,7 +34,11 @@ import { Capacitor } from '@capacitor/core';
   templateUrl: './users-list.page.html',
   styleUrls: ['./users-list.page.scss'],
   standalone: true,
-  imports: [IonCardContent, IonCardTitle, IonCardHeader, IonCard,
+  imports: [
+    IonCardContent,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
     IonInfiniteScrollContent,
     IonInfiniteScroll,
     IonLabel,
@@ -37,24 +49,30 @@ import { Capacitor } from '@capacitor/core';
     IonHeader,
     IonTitle,
     IonToolbar,
+    IonSearchbar,
     CommonModule,
     FormsModule,
     RouterModule,
     IonButton,
-    HttpClientModule,
+    ReactiveFormsModule,
   ],
 })
 export class UsersListPage implements OnInit {
   private store = inject(Store);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   userService = inject(UserService);
   users$!: Observable<User[]>;
   since = 0;
   perPage = 25;
-  //users: WritableSignal<User[]> = signal<User[]>([]);
+  usersList$!: Observable<User[]>;
+  filteredUsers: User[] = [];
+  searchControl = new FormControl('');
 
   ngOnInit() {
     this._getUsers();
+    this._prePopulateSearchBar();
+    this._setupSearchSubscription();
   }
 
   private _getUsers() {
@@ -62,13 +80,8 @@ export class UsersListPage implements OnInit {
       loadUsers({ since: this.since, perPage: this.perPage })
     );
     this.store.select('users').subscribe((users) => {
-      const currentUsers = this.userService.users();
       //NOTE: Since the key is not unique, we need to compare the id of the users
-      const newUsers = users.filter(
-        (newUser: User) =>
-          !currentUsers.some((existingUser) => existingUser.id === newUser.id)
-      );
-      this.userService.users.set([...currentUsers, ...newUsers]);
+      this._removeDuplicatedUsers(users);
     });
   }
 
@@ -92,5 +105,46 @@ export class UsersListPage implements OnInit {
         url: user.html_url,
       });
     }
+  }
+
+  private _prePopulateSearchBar() {
+    if (this.userService.user() !== null) {
+      this.searchControl.setValue(this.userService.user()?.name ?? '');
+      //this._filterUsers();
+    }
+  }
+
+  private _setupSearchSubscription() {
+    this.searchControl.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe(() => {
+        if (this.searchControl.value === '') {
+          this._getUsers();
+          this._removeDuplicatedUsers(this.userService.users());
+          return;
+        } else {
+          this._filterUsers();
+        }
+      });
+  }
+
+  private _filterUsers() {
+    const searchTerm = this.searchControl?.value?.toLowerCase();
+    this.store.select('users').subscribe((users) => {
+      this.filteredUsers = users.filter((user: any) =>
+        user.login.toLowerCase().includes(searchTerm)
+      );
+      this.userService.users.set(this.filteredUsers);
+      this._removeDuplicatedUsers(this.filteredUsers);
+    });
+  }
+
+  private _removeDuplicatedUsers(users: User[]) {
+    const currentUsers = this.userService.users();
+    const newUsers = users.filter(
+      (newUser: User) =>
+        !currentUsers.some((existingUser) => existingUser.id === newUser.id)
+    );
+    this.userService.users.set([...currentUsers, ...newUsers]);
   }
 }

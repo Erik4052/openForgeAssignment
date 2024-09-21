@@ -1,7 +1,12 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Users List</ion-title>
-  </ion-toolbar>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>User Search</ion-title>
+    </ion-toolbar>
+    <ion-toolbar>
+      <ion-searchbar [formControl]="searchControl" placeholder="Search by login"></ion-searchbar>
+    </ion-toolbar>
+  </ion-header>
 </ion-header>
 
 <ion-content>
